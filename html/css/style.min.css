@@ -1,0 +1,1 @@
+.inputfile{width:.1px;height:.1px;opacity:0;overflow:hidden;position:absolute;z-index:-1}.inputfile+label{font-size:1.25em;font-weight:700;color:#fff;background-color:#000;display:inline-block;cursor:pointer}.inputfile+label:hover,.inputfile:focus+label{background-color:red}.inputfile:focus+label{outline:#000 dotted 1px;outline:-webkit-focus-ring-color auto 5px}

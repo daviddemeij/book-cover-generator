@@ -42,6 +42,6 @@ def get_image():
     input_image = request.files.get('input_image')
     title = request.form.get('title')
     author = request.form.get('author')
-    style = request.form.get('style')
+    genre = request.form.get('genre').lower()
 
-    return book_cover_generator.generate_cover(input_image, title, author, style)
+    return book_cover_generator.generate_cover(input_image, title, author, genre)

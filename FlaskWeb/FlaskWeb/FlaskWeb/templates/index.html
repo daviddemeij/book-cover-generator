@@ -4,7 +4,7 @@
         <form id="data">
             <input type="text" placeholder="Title" id="title" name="title">
             <input type="text" placeholder="Author" id="author" name="author">
-            <input type="text" placeholder="Style" id="style" name="style">
+            <input type="text" placeholder="Genre" id="genre" name="genre">
             <input type="file" id="input_image" name="input_image">
             <input type="submit" value="Submit">
         </form>
@@ -24,7 +24,7 @@
                     url: "/get_image",
                     type: 'POST',
                     data: formData,
-                    async: false,
+                    async: true,
                     success: function (data) {
                         $("#result-img").attr("src", "data:image/jpeg;base64," + data)
                     },

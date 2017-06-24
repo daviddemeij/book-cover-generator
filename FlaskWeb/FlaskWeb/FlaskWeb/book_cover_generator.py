@@ -6,8 +6,10 @@ import time
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
+import base64
+import cStringIO
 
-default_font_path = "/home/david/code/book-cover-generator/deepart-api/python/PlayfairDisplaySC-Regular.ttf"
+default_font_path = "/mnt/c/Windows/Fonts/ARIALN.TTF"
 default_title = "Harry Potter and the goblet of fire"
 default_author = "J.K. Rowling"
 def style_transfer(style_number, image_path):
@@ -93,11 +95,11 @@ def draw_text(img, output_size, maintitle, subtitle, author, font_path):
     w, h = draw.textsize(author, font=font)
     draw.text(((W - w) / 2, H - h - 40), author, font=font, fill=(255, 255, 255))
     img.save('sample-out.jpg')
-    plt.imshow(img)
+    # plt.imshow(img)
     return img
 
-def generate_cover(input_image="harrypotter-content-image.jpg", title=default_title,
-                   author=default_author, style_number=25, font_path=default_font_path, output_size=[1600, 1000]):
+def generate_cover(input_image="FlaskWeb/harrypotter-content-image.jpg", title=default_title,
+                   author=default_author, style_number=20, font_path=default_font_path, output_size=(1600, 1000)):
     img = plt.imread(input_image)
 
     # Crop image to a 1.6 aspect ratio
@@ -122,8 +124,9 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title=default_ti
 
     maintitle, subtitle = split_title(title)
     img = draw_text(img, output_size, maintitle, subtitle, author, font_path)
-    return img
 
-generate_cover()
+    buffer = cStringIO.StringIO()
+    img.save(buffer, format="JPEG")
+    img_str = str(base64.b64encode(buffer.getvalue()))
 
-
+    return img_str

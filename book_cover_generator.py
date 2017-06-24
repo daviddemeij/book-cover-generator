@@ -8,9 +8,6 @@ from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
 
-default_font_path = "/home/david/code/book-cover-generator/deepart-api/python/PlayfairDisplaySC-Regular.ttf"
-default_title = "Harry Potter and the goblet of fire"
-default_author = "J.K. Rowling"
 def style_transfer(style_number, image_path):
     r = requests.post('http://turbo.deepart.io/api/post/',
                       data={'style': style_number,
@@ -20,22 +17,19 @@ def style_transfer(style_number, image_path):
     link = ("http://turbo.deepart.io/media/output/%s.jpg" % img)
     print link
 
-    max_num_seconds = 10
+    max_num_seconds = 20
     style_transfer_path = os.path.join(os.curdir, "results.jpg")
     print "Trying to store style transfer result at %s ..." % style_transfer_path
     for i in range(max_num_seconds):
-
-        time.sleep(5)
+        time.sleep(2)
         urllib.urlretrieve(link, style_transfer_path)
-
         try:
             img = Image.open(style_transfer_path)
             img.close()
             break
-
         except:
             print "Try #" + str(
-                i + 1) + ": Retrieving image failed (deepart-api needs more time). Trying again after 5s."
+                i + 1) + ": Retrieving image failed (deepart-api needs more time). Trying again after 2s."
     return plt.imread(style_transfer_path)
 
 def split_title(title):
@@ -57,14 +51,13 @@ def split_title(title):
     print "Subtitle: ", subtitle
     return maintitle, subtitle
 
-def draw_text(img, output_size, maintitle, subtitle, author, font_path):
+def draw_text(img, output_size, maintitle, subtitle, author, font_paths):
     draw = ImageDraw.Draw(img)
     H, W = output_size
     font_size = 300
     h_prev = 0
     h_max = 0
-
-    for title_word in [maintitle, subtitle]:
+    for title_word, font_path in zip([maintitle, subtitle], font_paths[:2]):
         font = ImageFont.truetype(font_path, font_size)
         w, h = draw.textsize(title_word, font=font)
         while w + 40 > W:
@@ -90,16 +83,34 @@ def draw_text(img, output_size, maintitle, subtitle, author, font_path):
 
         # now draw the text over it
         draw.text((x, y), title_word, (255, 255, 255), font=font)
-
-    font = ImageFont.truetype(font_path, 100)
+    font = ImageFont.truetype(font_paths[2], 100)
     w, h = draw.textsize(author, font=font)
     draw.text(((W - w) / 2, H - h - 40), author, font=font, fill=(255, 255, 255))
     return img
 
-def generate_cover(input_image="harrypotter-content-image.jpg", title=default_title,
-                   author=default_author, style_number=25, font_path=default_font_path, output_size=[1600, 1000]):
-    img = plt.imread(input_image)
+def generate_cover(input_image="harrypotter-content-image.jpg", title="Harry Potter and the Goblet of Fire",
+                   author="J.K. Rowling", genre="fantasy", output_size=[1600, 1000]):
+    genre = genre.lower().strip(" ")
+    genre_to_style = {
+        "thriller": 47,
+        "romance": 1,
+        "kids": 9,
+        "mystery": 37,
+        "sci-fi": 21,
+        "fantasy": 18
+    }
+    if genre not in genre_to_style.keys():
+        print "Warning: genre not found, using thriller!"
+        genre = "thriller"
+    style_number = genre_to_style[genre]
+    main_font_path = os.path.join(os.curdir, "fonts/"+genre+"_main.ttf")
+    sub_font_path = os.path.join(os.curdir, "fonts/"+genre+"_sub.ttf")
+    author_font_path = os.path.join(os.curdir, "fonts/"+genre+"_author.ttf")
 
+    print "loading fonts %s, %s and %s ..." % (main_font_path, sub_font_path, author_font_path)
+
+
+    img = plt.imread(input_image)
     # Crop image to a 1.6 aspect ratio
     if 1.6 * img.shape[0] > img.shape[1]:
         width = [0, img.shape[1]]
@@ -123,7 +134,8 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title=default_ti
     img = Image.fromarray(img, 'RGB')
 
     maintitle, subtitle = split_title(title)
-    img = draw_text(img, output_size, maintitle, subtitle, author, font_path)
+    img = draw_text(img, output_size, maintitle, subtitle, author,
+                    font_paths=[main_font_path, sub_font_path, author_font_path])
     final_image_path = os.path.join(os.curdir, 'generated_book_cover.jpg')
     img.save(final_image_path)
     return img

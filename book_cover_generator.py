@@ -3,6 +3,7 @@ import scipy.misc
 import requests
 import urllib
 import time
+import os
 from PIL import Image
 from PIL import ImageFont
 from PIL import ImageDraw
@@ -20,21 +21,22 @@ def style_transfer(style_number, image_path):
     print link
 
     max_num_seconds = 10
-
+    style_transfer_path = os.path.join(os.curdir, "results.jpg")
+    print "Trying to store style transfer result at %s ..." % style_transfer_path
     for i in range(max_num_seconds):
 
         time.sleep(5)
-        urllib.urlretrieve(link, "res.jpg")
+        urllib.urlretrieve(link, style_transfer_path)
 
         try:
-            img = Image.open("res.jpg")
+            img = Image.open(style_transfer_path)
             img.close()
             break
 
         except:
             print "Try #" + str(
                 i + 1) + ": Retrieving image failed (deepart-api needs more time). Trying again after 5s."
-    return plt.imread("res.jpg")
+    return plt.imread(style_transfer_path)
 
 def split_title(title):
     writing_subtitle = False
@@ -92,8 +94,6 @@ def draw_text(img, output_size, maintitle, subtitle, author, font_path):
     font = ImageFont.truetype(font_path, 100)
     w, h = draw.textsize(author, font=font)
     draw.text(((W - w) / 2, H - h - 40), author, font=font, fill=(255, 255, 255))
-    img.save('sample-out.jpg')
-    plt.imshow(img)
     return img
 
 def generate_cover(input_image="harrypotter-content-image.jpg", title=default_title,
@@ -114,7 +114,9 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title=default_ti
 
     # Resize image to desired output size
     img = scipy.misc.imresize(img, (output_size[0], output_size[1], 3))
-    scipy.misc.imsave('content-image.jpg', img)
+    content_image_path = os.path.join(os.curdir, 'content-image.jpg')
+    print "Saving content image at %s ..." % content_image_path
+    scipy.misc.imsave(content_image_path, img)
 
     img = style_transfer(style_number, 'content-image.jpg')
     img = scipy.misc.imresize(img, (output_size[0], output_size[1], 3))
@@ -122,6 +124,8 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title=default_ti
 
     maintitle, subtitle = split_title(title)
     img = draw_text(img, output_size, maintitle, subtitle, author, font_path)
+    final_image_path = os.path.join(os.curdir, 'generated_book_cover.jpg')
+    img.save(final_image_path)
     return img
 
 generate_cover()

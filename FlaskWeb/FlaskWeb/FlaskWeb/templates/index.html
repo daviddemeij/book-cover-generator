@@ -1,33 +1,41 @@
-{% extends "layout.html" %}
+<html>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+        <form id="data">
+            <input type="text" placeholder="Title" id="title" name="title">
+            <input type="text" placeholder="Author" id="author" name="author">
+            <input type="text" placeholder="Style" id="style" name="style">
+            <input type="file" id="input_image" name="input_image">
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <img id="result-img" height="800" width="500" src="http://via.placeholder.com/500x800">
 
-{% block content %}
+        <script>
+            $('form').on('submit', uploadFiles);
 
-<div class="jumbotron">
-    <h1>Flask</h1>
-    <p class="lead">Flask is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://flask.pocoo.org/" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-</div>
+            function uploadFiles(e) {
+                e.stopPropagation();
+                e.preventDefault();
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            Flask gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://flask.pocoo.org/docs/">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>The Python Package Index is a repository of software for the Python programming language.</p>
-        <p><a class="btn btn-default" href="https://pypi.python.org/pypi">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Microsoft Azure</h2>
-        <p>You can easily publish to Microsoft Azure using Python Tools for Visual Studio. Find out how you can host your application using a free trial today.</p>
-        <p><a class="btn btn-default" href="http://azure.microsoft.com">Learn more &raquo;</a></p>
-    </div>
-</div>
+                var formData = new FormData($(this)[0]);
 
-{% endblock %}
+                $.ajax({
+                    url: "/get_image",
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    success: function (data) {
+                        $("#result-img").attr("src", "data:image/jpeg;base64," + data)
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+                return false;
+            }
+        </script>
+
+    </body>
+</html>

@@ -99,7 +99,7 @@ def draw_text(img, output_size, maintitle, subtitle, author, font_path):
     return img
 
 def generate_cover(input_image="FlaskWeb/harrypotter-content-image.jpg", title=default_title,
-                   author=default_author, style_number=20, font_path=default_font_path, output_size=(1600, 1000)):
+                   author=default_author, style_number="20", font_path=default_font_path, output_size=(1600, 1000)):
     img = plt.imread(input_image)
 
     # Crop image to a 1.6 aspect ratio

@@ -111,7 +111,6 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title="Harry Pot
 
     print "loading fonts %s, %s and %s ..." % (main_font_path, sub_font_path, author_font_path)
 
-
     img = plt.imread(input_image)
     # Crop image to a 1.6 aspect ratio
     if 1.6 * img.shape[0] > img.shape[1]:

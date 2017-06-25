@@ -6,6 +6,10 @@ This project requires Python 2.7 all other requirements can be installed through
 ```
 pip install -r requirements.txt 
 ```
+You can run the file locally at <a href="localhost:5555">localhost:5555</a> by running:
 
+```
+python run_server.py
+```
 
 

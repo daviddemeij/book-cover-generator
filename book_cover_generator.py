@@ -97,7 +97,7 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title="Harry Pot
         "kids": 9,
         "mystery": 37,
         "sci-fi": 21,
-        "fantasy": 18
+        "fantasy": 35
     }
     if genre not in genre_to_style.keys():
         print "Warning: genre not found, using thriller!"
@@ -112,7 +112,7 @@ def generate_cover(input_image="harrypotter-content-image.jpg", title="Harry Pot
 
     img = plt.imread(input_image)
     # Crop image to a 1.6 aspect ratio
-    if 1.6 * img.shape[0] > img.shape[1]:
+    if img.shape[0] > 1.6*img.shape[1]:
         width = [0, img.shape[1]]
         difference = (img.shape[0] - 1.6 * img.shape[1])
         height = [int(difference / 2.0), int(1.6 * img.shape[1] + difference / 2.0)]

@@ -19,16 +19,31 @@
         </div>
         <div class="formdiv">
             <form id="data" class="topBefore">   
-                <input id="title" name="title" type="text" placeholder="TITLE">
-                <input id="author" name="author" type="text" placeholder="AUTHOR">
-                <input id="genre" name="genre" type="text" placeholder="GENRE"> <!-- should be thriller/romance/kids/mystery/sci-fi/fantasy -->
-                <div class="fileinput">IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="file" id="input_image" name="input_image"></div>
+                <input id="title" name="title" type="text" placeholder="TITLE" required>
+                <input id="author" name="author" type="text" placeholder="AUTHOR" required>
+                <input id="genre" name="genre" type="text" placeholder="GENRE" required> <!-- should be thriller/romance/kids/mystery/sci-fi/fantasy -->
+                <div class="fileinput">IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="file" id="input_image" name="input_image" required></div>
                 <input id="submit" type="submit" value="GENERATE BOOK COVER!">
             </form>
         </div>
         <script type="text/javascript" src="static/script.js"></script>
 
         <script>
+            function inputImage(b64) {
+                var findI = 0;
+
+                for (i = 0; i < $(".books").slick('getSlick').slideCount; i++) {
+                    if ($(".books").slick('getSlick').$slides[i].src.endsWith('loading.gif')) {
+                        findI = i;
+                    }
+                }
+                $(".books").slick('getSlick').$slides[findI].src = "data:image/jpeg;base64," + b64;
+                $(".books").slick('slickGoTo', findI);
+                $('.books')[findI].slick.refresh();
+            }
+
+            var showingExamples = true;
+
             $('#data').on('submit', uploadFiles);
 
             function uploadFiles(e) {
@@ -36,6 +51,18 @@
                 e.preventDefault();
 
                 var formData = new FormData($(this)[0]);
+                document.getElementById("data").reset();
+
+                if (showingExamples) {
+                    showingExamples = false;
+                    $(".books").slick('slickRemove', null, null, true);
+                }
+
+                if ($(".books").slick('getSlick').slideCount == 0) {
+                    $(".books").slick('slickAdd', "<img src='static/loading.gif'>");
+                } else {
+                    $(".books").slick('slickAdd', "<img src='static/loading.gif'>", 0, true);
+                }
 
                 $.ajax({
                     url: "/get_image",
@@ -43,7 +70,7 @@
                     data: formData,
                     async: true,
                     success: function (data) {
-                        $("#result-img").attr("src", "data:image/jpeg;base64," + data)
+                        inputImage(data);
                     },
                     cache: false,
                     contentType: false,

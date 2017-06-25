@@ -72,6 +72,9 @@
                     success: function (data) {
                         inputImage(data);
                     },
+                    error: function (data) {
+                        $(".books").slick("slickRemove", 0);
+                    },
                     cache: false,
                     contentType: false,
                     processData: false

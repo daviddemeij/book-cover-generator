@@ -1,0 +1,41 @@
+<html>
+    <body>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+        <form id="data">
+            <input type="text" placeholder="Title" id="title" name="title">
+            <input type="text" placeholder="Author" id="author" name="author">
+            <input type="text" placeholder="Genre" id="genre" name="genre">
+            <input type="file" id="input_image" name="input_image">
+            <input type="submit" value="Submit">
+        </form>
+        <br>
+        <img id="result-img" height="800" width="500" src="http://via.placeholder.com/500x800">
+
+        <script>
+            $('form').on('submit', uploadFiles);
+
+            function uploadFiles(e) {
+                e.stopPropagation();
+                e.preventDefault();
+
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: "/get_image",
+                    type: 'POST',
+                    data: formData,
+                    async: true,
+                    success: function (data) {
+                        $("#result-img").attr("src", "data:image/jpeg;base64," + data)
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false
+                });
+
+                return false;
+            }
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,9 @@
+C:\GlobalAI\FlaskWeb\FlaskWeb\bin\Microsoft.PythonTools.WebRole.dll
+C:\GlobalAI\FlaskWeb\FlaskWeb\bin\AzureSetup.cfg
+C:\GlobalAI\FlaskWeb\FlaskWeb\bin\Microsoft.PythonTools.AzureSetup.exe
+C:\GlobalAI\FlaskWeb\FlaskWeb\bin\Microsoft.PythonTools.AzureSetup.exe.config
+C:\GlobalAI\FlaskWeb\FlaskWeb\bin\wfastcgi.py
+C:\GlobalAI\FlaskWeb\FlaskWeb\obj\Release\web.config
+C:\GlobalAI\FlaskWeb\FlaskWeb\obj\Release\web.debug.config
+C:\GlobalAI\FlaskWeb\FlaskWeb\obj\Release\deployment-updated-orig-prefix.txt
+C:\GlobalAI\FlaskWeb\FlaskWeb\ptvs_virtualenv_proxy.py

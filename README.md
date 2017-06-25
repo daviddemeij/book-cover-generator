@@ -9,7 +9,7 @@ pip install -r requirements.txt
 You can run the file locally at <a href="localhost:5555">localhost:5555</a> by running:
 
 ```
-python run_server.py
+python runserver.py
 ```
 
 

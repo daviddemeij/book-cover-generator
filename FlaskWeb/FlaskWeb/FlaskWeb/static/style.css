@@ -235,7 +235,7 @@ div	 {
 	content: '\2192' !important;
 }
 
-.books img {
-	padding-left: 75px;
-	padding-right: 75px;
+img {
+	padding-left: 125px;
+	padding-right: 125px;
 }
